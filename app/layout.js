@@ -1,6 +1,6 @@
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
