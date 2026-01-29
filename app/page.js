@@ -1,7 +1,11 @@
  "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import sections from "./sections";
+import AsidePanels from "./components/AsidePanels";
+import { topArticles } from "./data/topArticles";
+import TopNav from "./components/TopNav";
+import SiteFooter from "./components/SiteFooter";
 
 const navIconMap = {
   hot: "fire",
@@ -68,9 +72,52 @@ function getPopularity(item, index) {
   return Math.max(0, Math.min(5, score));
 }
 
+function getToolKey(name) {
+  return String(name || "").replace(/\s+/g, "");
+}
+
+function getPricingTag(item) {
+  const text = `${item.name || ""} ${item.desc || ""}`.toLowerCase();
+  const explicit = typeof item.pricing === "string" ? item.pricing : "";
+  if (explicit) return explicit;
+  if (text.includes("限免") || text.includes("限时免费")) return "限免";
+  if (text.includes("免费额度") || text.includes("试用") || text.includes("额度")) return "免费额度";
+  if (text.includes("免费") || text.includes("开源")) return "免费";
+  if (
+    text.includes("付费") ||
+    text.includes("订阅") ||
+    text.includes("会员") ||
+    text.includes("pro") ||
+    text.includes("premium")
+  ) {
+    return "付费";
+  }
+  return "免费额度";
+}
+
+function getTagClass(tag) {
+  switch (tag) {
+    case "免费":
+      return "free";
+    case "付费":
+      return "paid";
+    case "免费额度":
+      return "quota";
+    case "限免":
+      return "limited";
+    default:
+      return "quota";
+  }
+}
+
 export default function Home() {
   const [activeId, setActiveId] = useState(undefined);
   const heroCanvasRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const heroText = "发现最适合你的 AI 工具";
+  const [typedText, setTypedText] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const popularItems = sections
     .flatMap((section, sectionIndex) =>
       section.items.map((item, itemIndex) => ({
@@ -78,11 +125,27 @@ export default function Home() {
         popularity: getPopularity(item, itemIndex),
         sectionId: section.id,
         sectionTitle: section.title,
-        order: sectionIndex * 100 + itemIndex
+        order: sectionIndex * 100 + itemIndex,
+        toolKey: getToolKey(item.name)
       }))
     )
     .sort((a, b) => b.popularity - a.popularity || a.order - b.order)
     .slice(0, 8);
+
+
+  const filteredSections = useMemo(() => {
+    const keyword = query.trim().toLowerCase();
+    if (!keyword) return sections;
+    return sections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((item) => {
+          const text = `${item.name || ""} ${item.desc || ""}`.toLowerCase();
+          return text.includes(keyword);
+        })
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [query]);
 
   useEffect(() => {
     const scrollToHash = (hash) => {
@@ -95,7 +158,7 @@ export default function Home() {
 
     const updateActive = () => {
       const hash = window.location.hash.replace("#", "");
-      setActiveId(hash || navItems[0]?.id);
+      setActiveId(hash);
       scrollToHash(hash);
     };
 
@@ -104,6 +167,74 @@ export default function Home() {
 
     return () => window.removeEventListener("hashchange", updateActive);
   }, []);
+
+  useEffect(() => {
+    const headings = sections
+      .map((section) => document.getElementById(`section-${section.id}`))
+      .filter(Boolean);
+    if (headings.length === 0) return undefined;
+
+    const topNavHeight = 32;
+    const buffer = 16;
+    const triggerLine = topNavHeight + buffer;
+
+    let rafId = 0;
+    const updateActiveOnScroll = () => {
+      rafId = 0;
+      let currentId = headings[0].id.replace("section-", "");
+      for (const heading of headings) {
+        const top = heading.getBoundingClientRect().top;
+        if (top <= triggerLine) {
+          currentId = heading.id.replace("section-", "");
+        } else {
+          break;
+        }
+      }
+      setActiveId(currentId);
+    };
+
+    const onScroll = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(updateActiveOnScroll);
+      }
+    };
+
+    updateActiveOnScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      setTypedText(heroText);
+      return undefined;
+    }
+    let index = 0;
+    let timerId;
+    const tick = () => {
+      index += 1;
+      setTypedText(heroText.slice(0, index));
+      if (index < heroText.length) {
+        timerId = window.setTimeout(tick, 80);
+      }
+    };
+    timerId = window.setTimeout(tick, 80);
+    return () => window.clearTimeout(timerId);
+  }, [heroText]);
+
+  useEffect(() => {
+    if (isSearchOpen) {
+      requestAnimationFrame(() => {
+        searchInputRef.current?.focus();
+      });
+    }
+  }, [isSearchOpen]);
 
   useEffect(() => {
     const canvas = heroCanvasRef.current;
@@ -207,125 +338,152 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="page" id="top">
+    <div className="page" id="top">
+      <TopNav current="/" />
       <aside className="sidebar sidebar-card">
-          <a className="logo" href="/" aria-label="AI 工具导航首页">
-            <span className="logo-icon" aria-hidden="true">
-              <img src="/icon.svg" alt="" loading="lazy" decoding="async" />
-            </span>
-            AI 工具导航
-          </a>
-          <nav className="sidebar-nav" aria-label="分类导航">
-            {navItems.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className={item.id === activeId ? "active" : ""}
-                aria-current={item.id === activeId ? "true" : undefined}
-              >
-                <span className="nav-icon">
-                  <NavIcon name={item.icon} />
-                </span>
-                <span>{item.label}</span>
-              </a>
-            ))}
+          <nav aria-label="分类导航">
+            <ul className="sidebar-nav" role="list">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    className={item.id === activeId ? "active" : ""}
+                    aria-current={item.id === activeId ? "true" : undefined}
+                    onClick={() => {
+                      setActiveId(item.id);
+                      const target = document.getElementById(item.id);
+                      if (target) {
+                        target.scrollIntoView({ block: "start", behavior: "smooth" });
+                      }
+                    }}
+                  >
+                    <span className="nav-icon">
+                      <NavIcon name={item.icon} />
+                    </span>
+                    <span>{item.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </nav>
           <a className="ghost sidebar-action" href="mailto:wwwggxk@gmail.com">
             提交推荐
           </a>
       </aside>
 
-      <div className="content">
-        <header className="hero hero-content">
-          <div className="hero-visual" aria-hidden="true">
-            <canvas ref={heroCanvasRef} className="hero-canvas" />
-          </div>
-          <div className="hero-copy">
-            <h1>发现最适合你的 AI 工具</h1>
-            <p className="hero-subtitle">
-              按场景分类整理，覆盖智能助手、写作、图像、视频、音频、开发、设计与数据分析。
-            </p>
-          </div>
-        </header>
+      <main className="content" role="main">
+        <main className="content-main">
+          <div className="content-primary">
+            <header className="hero hero-content">
+              <div className="hero-visual" aria-hidden="true">
+                <canvas ref={heroCanvasRef} className="hero-canvas" />
+              </div>
+              <div className="hero-copy">
+                <div className="hero-title">
+                  <h1 className="sr-only">{heroText}</h1>
+                  {!isSearchOpen ? (
+                    <button
+                      type="button"
+                      className="hero-typing"
+                      onClick={() => setIsSearchOpen(true)}
+                      aria-label="点击输入关键字搜索"
+                    >
+                      <span className="typing-text" aria-hidden="true">{typedText}</span>
+                      <span className="typing-cursor" aria-hidden="true" />
+                    </button>
+                  ) : (
+                    <form
+                      className="hero-search"
+                      role="search"
+                      onSubmit={(event) => event.preventDefault()}
+                    >
+                      <label className="sr-only" htmlFor="hero-search-input">
+                        输入关键字搜索
+                      </label>
+                      <input
+                        id="hero-search-input"
+                        ref={searchInputRef}
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        onBlur={() => {
+                          if (!query.trim()) {
+                            setIsSearchOpen(false);
+                          }
+                        }}
+                        placeholder="输入关键字搜索工具..."
+                        aria-label="输入关键字搜索工具"
+                      />
+                    </form>
+                  )}
+                </div>
+              </div>
+            </header>
 
-        <section className="hotlist" aria-label="趋势榜单">
-          <h2>趋势榜单</h2>
-          <p>基于公开热度与用户关注度，精选高人气 AI 工具。</p>
-          <ol className="hotlist-list">
-            {popularItems.map((item, index) => (
-              <li key={`${item.name}-${index}`}>
-                <a href={item.url} target="_blank" rel="noreferrer">
-                  <span className="hotlist-rank">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="hotlist-info">
-                    <strong>{item.name}</strong>
-                    <span>{item.sectionTitle}</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-          <section id="catalog" className="catalog" aria-label="工具分类">
-            {sections.map((section) => (
+            <section id="catalog" className="catalog" aria-label="工具分类">
+            {filteredSections.length === 0 ? (
+              <div className="empty-state">未找到匹配的工具，请换个关键词试试。</div>
+            ) : null}
+            {filteredSections.map((section) => (
               <article className="section-card" key={section.id} id={section.id} aria-labelledby={`section-${section.id}`}>
                 <h2 id={`section-${section.id}`}>{section.title}</h2>
                 {section.description ? <p>{section.description}</p> : null}
-                <div className="tool-grid">
+                <ul className="tool-grid" role="list">
                   {section.items.map((item, index) => {
                     const popularity = getPopularity(item, index);
+                    const toolKey = getToolKey(item.name);
                     return (
-                    <a
-                      key={item.name}
-                      className="tool-card"
-                      href={item.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={`${item.name}（新窗口打开）`}
-                    >
-                      <div className="tool-avatar" aria-hidden="true">
-                        {item.icon ? (
-                          <img src={item.icon} alt={item.name} loading="lazy" decoding="async" />
-                        ) : (
-                          getInitials(item.name)
-                        )}
-                      </div>
-                      <div>
-                        <h3 className="tool-title">{item.name}</h3>
-                        <p>{item.desc}</p>
-                        {popularity > 0 ? (
-                          <div className="tool-meta">
+                    <li key={item.name}>
+                      <a
+                        className="tool-card"
+                        href={`/tools/${encodeURIComponent(toolKey)}`}
+                        aria-label={`查看 ${item.name}`}
+                      >
+                        <div className="tool-avatar" aria-hidden="true">
+                          {item.icon ? (
+                            <img src={item.icon} alt={item.name} loading="lazy" decoding="async" />
+                          ) : (
+                            getInitials(item.name)
+                          )}
+                        </div>
+                        <div>
+                          <h3 className="tool-title">{item.name}</h3>
+                          <p>{item.desc}</p>
+                        </div>
+                        <div className="tool-meta">
+                          {popularity > 0 ? (
                             <span className="tool-pop" aria-label={`热门指数 ${popularity}/5`}>
                               <span className="tool-pop-label">热度</span>
-                              <span className="tool-pop-dots" aria-hidden="true">
+                              <span className="tool-pop-flames" aria-hidden="true">
                                 {[1, 2, 3, 4, 5].map((level) => (
                                   <span
                                     key={level}
-                                    className={level <= popularity ? "dot active" : "dot"}
-                                  />
+                                    className={level <= popularity ? "flame active" : "flame"}
+                                  >
+                                    🔥
+                                  </span>
                                 ))}
                               </span>
                             </span>
-                          </div>
-                        ) : null}
-                      </div>
-                    </a>
+                          ) : null}
+                          {(() => {
+                            const tag = getPricingTag(item);
+                            return <span className={`tool-tag tool-tag--${getTagClass(tag)}`}>{tag}</span>;
+                          })()}
+                        </div>
+                      </a>
+                    </li>
                     );
                   })}
-                </div>
+                </ul>
               </article>
             ))}
           </section>
+          </div>
+          <AsidePanels popularItems={popularItems} topArticles={topArticles} />
+        </main>
 
-          <footer className="footer">
-            <p>
-              © 2026 AI 工具导航 ·{" "}
-              <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
-                京ICP备2026004104号-1
-              </a>
-            </p>
-          </footer>
-      </div>
-    </main>
+          <SiteFooter />
+      </main>
+    </div>
   );
 }
