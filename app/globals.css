@@ -52,6 +52,11 @@ a {
   z-index: 5;
   background: #f4f6f9;
   border-bottom: 1px solid #e2e8f0;
+  transition: opacity 0.2s ease;
+}
+
+.top-nav--scrolled {
+  opacity: 0.91;
 }
 
 .top-nav-inner {
@@ -79,7 +84,7 @@ a {
   align-items: center;
 }
 
-.top-nav-logo img {
+.top-nav-logo-svg {
   width: 28px;
   height: 28px;
   border-radius: 4px;
@@ -118,6 +123,7 @@ a {
   font-weight: 600;
   height: 28px;
   line-height: 28px;
+  border-radius: 7px;
 }
 
 .top-nav-cta:hover {
