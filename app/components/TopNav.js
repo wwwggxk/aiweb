@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 const NAV_ITEMS = [
   { href: "/", label: "AI工具" },
-  { href: "/ai-prompts", label: "AI提示词" },
-  { href: "/ai-tutorials", label: "AI教程" },
+  { href: "/prompts", label: "AI提示词" },
+  { href: "/articles", label: "AI文章" },
   { href: "/news", label: "AI资讯" }
 ];
 
@@ -74,6 +74,7 @@ export default function TopNav({ current = "" }) {
           className="top-nav-cta"
           href="/download"
           aria-current={current === "/download" ? "page" : undefined}
+          style={{display: "none"}}
         >
           下载 AI-Tools
         </a>

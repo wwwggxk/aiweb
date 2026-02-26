@@ -73,7 +73,7 @@ export default function ToolDetailPage({ params }) {
       <div className="tool-detail-hero">
         <div className="tool-detail-thumb" aria-hidden="true">
           {tool.icon ? (
-            <img src={tool.icon} alt="" loading="lazy" decoding="async" />
+            <img src={tool.icon} alt={`${tool.name} 图标`} loading="lazy" decoding="async" width="64" height="64" />
           ) : (
             <span>{getInitials(tool.name)}</span>
           )}

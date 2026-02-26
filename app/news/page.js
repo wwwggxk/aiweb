@@ -1,64 +1,85 @@
-import sections from "../sections";
-import { topArticles } from "../data/topArticles";
+import { newsItems } from "../data/newsItems";
+import { topNews } from "../data/topNews";
 import TopNav from "../components/TopNav";
 import SiteFooter from "../components/SiteFooter";
 
 export const dynamic = "force-static";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
-function getPopularity(item, index) {
-  if (typeof item.popularity === "number") {
-    return Math.max(0, Math.min(5, item.popularity));
+export const metadata = {
+  title: "AI 资讯 - 最新 AI 工具动态与热门文章 | AI 工具导航",
+  description: "精选近期热门 AI 工具与动态，聚合高搜索热度的长尾主题内容。快速掌握 AI 行业趋势，了解最新 AI 工具推荐。",
+  keywords: [
+    "AI 资讯",
+    "AI 新闻",
+    "AI 工具动态",
+    "AI 行业趋势",
+    "热门 AI 工具",
+    "AI 工具推荐",
+    "AI 最新消息"
+  ],
+  alternates: {
+    canonical: `${siteUrl}/news`
+  },
+  openGraph: {
+    title: "AI 资讯 - 最新 AI 工具动态与热门文章",
+    description: "精选近期热门 AI 工具与动态，快速掌握 AI 行业趋势。",
+    url: `${siteUrl}/news`,
+    type: "website",
+    siteName: "AI 工具导航"
+  },
+  twitter: {
+    card: "summary",
+    title: "AI 资讯 - 最新 AI 工具动态",
+    description: "精选近期热门 AI 工具与动态，快速掌握 AI 行业趋势。"
   }
-  const score = 5 - Math.floor(index / 4);
-  return Math.max(0, Math.min(5, score));
-}
+};
 
-const briefs = sections
-  .flatMap((section, sectionIndex) =>
-    section.items.map((item, itemIndex) => ({
-      ...item,
-      order: sectionIndex * 100 + itemIndex,
-      popularity: getPopularity(item, itemIndex)
-    }))
-  )
-  .sort((a, b) => b.popularity - a.popularity || a.order - b.order)
-  .slice(0, 12);
 
 export default function NewsPage() {
   return (
     <div className="page" id="top">
       <TopNav current="/news" />
 
-      <main className="content content--wide" role="main">
-        <section className="briefs" aria-label="资讯速览">
-          <h2>资讯速览</h2>
-          <p>精选近期热门工具与动态，快速掌握趋势。</p>
-          <ol className="briefs-list">
-            {briefs.map((item, index) => (
-              <li key={`${item.name}-brief-${index}`}>
-                <a href={`/tools/${encodeURIComponent(item.name.replace(/\s+/g, ""))}`} title={item.name}>
-                  <h3 className="briefs-title">{item.name}</h3>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </section>
+      <div className="content content--wide">
+        <main className="content-main" role="main">
+          <div className="content-primary">
+            <section className="news-list" aria-label="资讯列表">
+              {newsItems.map((news) => (
+                <article key={news.id} className="news-item">
+                  <h2 className="news-item-title">
+                    <a href={`/news/${news.slug}`} title={news.title}>
+                      {news.title}
+                    </a>
+                  </h2>
+                  <div className="news-item-content">
+                    <p>{news.summary}</p>
+                  </div>
+                  <div className="news-item-meta">
+                    <time dateTime={news.date}>{news.date}</time>
+                  </div>
+                </article>
+              ))}
+            </section>
+          </div>
 
-        <section className="popular" aria-label="热门文章">
-          <h2>热门文章</h2>
-          <p>聚合高搜索热度的长尾主题内容。</p>
-          <ol className="popular-list">
-            {topArticles.map((article, index) => (
-              <li key={`${article.title}-${index}`}>
-                <a href={article.url} title={article.title}>
-                  <h3 className="popular-title">{article.title}</h3>
-                </a>
-              </li>
-            ))}
-          </ol>
-        </section>
-      </main>
+          <aside className="content-aside" aria-label="最新资讯">
+            <section className="briefs">
+              <h2>最新资讯</h2>
+              <ol className="briefs-list">
+                {topNews.map((news, index) => (
+                  <li key={`${news.title}-${index}`}>
+                    <a href={news.url} title={news.title}>
+                      <h3 className="briefs-title">{news.title}</h3>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </aside>
+        </main>
+      </div>
 
       <SiteFooter />
     </div>

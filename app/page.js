@@ -440,7 +440,7 @@ export default function Home() {
                       >
                         <div className="tool-avatar" aria-hidden="true">
                           {item.icon ? (
-                            <img src={item.icon} alt={item.name} loading="lazy" decoding="async" />
+                            <img src={item.icon} alt={`${item.name} - ${item.desc}`} loading="lazy" decoding="async" width="48" height="48" />
                           ) : (
                             getInitials(item.name)
                           )}

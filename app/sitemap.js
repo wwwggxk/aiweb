@@ -1,9 +1,36 @@
 export const dynamic = "force-static";
 
+import sections from "./sections";
+import { getPrompts } from "./lib/get-prompts";
+import { newsItems } from "./data/newsItems";
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
-export default function sitemap() {
-  return [
+const articles = [
+  "ai-writing-tools-for-beginners",
+  "ai-image-prompt-guide",
+  "ai-video-generator-comparison",
+  "ai-ppt-generator",
+  "ai-office-productivity",
+  "ai-coding-assistant",
+  "ai-voice-generator"
+];
+
+function getToolKey(name) {
+  return String(name || "").replace(/\s+/g, "");
+}
+
+export default async function sitemap() {
+  const allTools = sections.flatMap((section) =>
+    section.items.map((item) => ({
+      key: getToolKey(item.name),
+      name: item.name
+    }))
+  );
+
+  const prompts = await getPrompts();
+
+  const staticPages = [
     {
       url: siteUrl,
       lastModified: new Date(),
@@ -11,52 +38,52 @@ export default function sitemap() {
       priority: 1
     },
     {
-      url: `${siteUrl}/article/ai-writing-tools-for-beginners`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
-      url: `${siteUrl}/article/ai-image-prompt-guide`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
-      url: `${siteUrl}/article/ai-video-generator-comparison`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
-      url: `${siteUrl}/article/ai-ppt-generator`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
-      url: `${siteUrl}/article/ai-office-productivity`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
-      url: `${siteUrl}/article/ai-coding-assistant`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
-      url: `${siteUrl}/article/ai-voice-generator`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.7
-    },
-    {
       url: `${siteUrl}/news`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8
+      changeFrequency: "daily",
+      priority: 0.9
+    },
+    {
+      url: `${siteUrl}/prompts`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9
+    },
+    {
+      url: `${siteUrl}/download`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7
     }
   ];
+
+  const articlePages = articles.map((slug) => ({
+    url: `${siteUrl}/articles/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.8
+  }));
+
+  const toolPages = allTools.map((tool) => ({
+    url: `${siteUrl}/tools/${tool.key}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.7
+  }));
+
+  const promptPages = prompts.slice(0, 100).map((prompt) => ({
+    url: `${siteUrl}/prompts/${prompt.id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6
+  }));
+
+  const newsPages = newsItems.map((news) => ({
+    url: `${siteUrl}/news/${news.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.8
+  }));
+
+  return [...staticPages, ...articlePages, ...newsPages, ...toolPages, ...promptPages];
 }
