@@ -22,12 +22,12 @@ export async function generateMetadata({ params }) {
 
   if (!news) {
     return {
-      title: "未找到资讯 - AI 工具导航",
+      title: "未找到资讯",
       description: "该资讯不存在，请返回资讯列表查看其他内容。"
     };
   }
 
-  const fullTitle = `${news.title} | AI 资讯 - AI 工具导航`;
+  const fullTitle = `${news.title} | AI 资讯`;
   return {
     title: fullTitle,
     description: news.summary,

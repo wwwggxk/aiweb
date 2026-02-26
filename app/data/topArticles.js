@@ -1,4 +1,5 @@
 export const topArticles = [
+  { title: "2026大模型争霸：DeepSeek、GPT、Gemini、Claude全面横评", url: "/articles/2026-llm-comparison-guide" },
   { title: "2026普通人AI提效指南：7个即装即用的工作流", url: "/articles/ai-efficiency-guide-2026" },
   { title: "别再练提示词了：2026职场红利在「技能知识库」", url: "/articles/skill-knowledge-base-2026" },
   { title: "GEO优化五步法：让AI主动推荐你的内容", url: "/articles/geo-optimization-guide" },

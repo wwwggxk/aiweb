@@ -19,12 +19,12 @@ export async function generateMetadata({ params }) {
   
   if (!article) {
     return {
-      title: "未找到文章 - AI 工具导航",
+      title: "未找到文章",
       description: "该文章不存在，请返回首页查看其他内容。"
     };
   }
 
-  const fullTitle = `${article.title} | AI 工具导航`;
+  const fullTitle = `${article.title}`;
   const keywords = [
     article.title,
     "AI 工具",

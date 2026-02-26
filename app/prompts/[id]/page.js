@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
   const id = params?.id;
   if (!id) {
     return {
-      title: `提示词详情 - ${SITE_NAME}`,
+      title: `提示词详情`,
       description: `浏览与复制 AI 提示词、ChatGPT Prompt 模板，免费使用。`,
       keywords: SEO_KEYWORDS,
     };
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }) {
   const prompt = list.find((p) => String(p.id) === String(id));
   if (!prompt) {
     return {
-      title: `未找到 - ${SITE_NAME}`,
+      title: `未找到`,
       description: `该提示词不存在。可返回首页浏览更多 AI 提示词与 ChatGPT Prompt 模板。`,
       keywords: SEO_KEYWORDS,
     };
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }) {
   const desc =
     prompt.description ||
     `AI 提示词「${title}」的完整内容，可一键复制到 ChatGPT、Claude、文心一言等使用。适合在找 ChatGPT 提示词怎么写、免费 AI 提示词模板 的用户。`;
-  const fullTitle = `${title} - AI 提示词详情 | ${SITE_NAME}`;
+  const fullTitle = `${title} - AI 提示词详情`;
   const longTail = 'ChatGPT 提示词怎么写, 免费 AI 提示词模板, Claude 提示词大全';
   const keywords = [SEO_KEYWORDS, title, longTail, ...(Array.isArray(prompt.tags) ? prompt.tags : [])].join(', ');
   return {

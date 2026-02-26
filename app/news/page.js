@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
 export const metadata = {
-  title: "AI 资讯 - 最新 AI 工具动态与行业趋势 | AI 工具导航",
+  title: "AI 资讯 - 最新 AI 工具动态与行业趋势",
   description: "精选 AI 行业资讯，覆盖大模型更新、工具发布、开源生态与政策法规。快速掌握 AI 领域最新动态。",
   keywords: [
     "AI 资讯", "AI 新闻", "AI 工具动态", "AI 行业趋势",
@@ -38,10 +38,10 @@ function formatCount(n) {
 }
 
 function timeAgo(dateStr) {
-  const now = new Date("2026-02-26");
+  const now = new Date();
   const date = new Date(dateStr);
   const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-  if (diff === 0) return "今天";
+  if (diff <= 0) return "今天";
   if (diff === 1) return "昨天";
   if (diff <= 7) return `${diff}天前`;
   if (diff <= 30) return `${Math.floor(diff / 7)}周前`;
@@ -70,7 +70,7 @@ export default function NewsPage() {
                     <div className="news-card-meta">
                       <time dateTime={news.date}>{timeAgo(news.date)}</time>
                       <span className="news-card-dot">·</span>
-                      <span>AI工具编辑部</span>
+                      <span>AI资讯编辑部</span>
                       {news.views > 0 && (
                         <>
                           <span className="news-card-dot">·</span>

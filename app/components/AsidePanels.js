@@ -10,7 +10,7 @@ export default function AsidePanels({
     <aside className="content-aside" aria-label="榜单与资讯">
       <section className="trending" aria-label="趋势榜单">
         <h2>趋势榜单</h2>
-        <p>基于公开热度与用户关注度，精选高人气 AI 工具。</p>
+        <p>大家都在用什么？看看本周最受关注的 AI 工具。</p>
         <ol className="trending-list">
           {popularItems.slice(0, 7).map((item, index) => (
             <li key={`${item.name}-${index}`}>
@@ -27,7 +27,7 @@ export default function AsidePanels({
       </section>
       <section className="briefs" aria-label="资讯速递">
         <h2>资讯速览</h2>
-        <p>聚合近期热点动态，快速掌握趋势。</p>
+        <p>AI 圈又出了什么新动向？30 秒刷完今日要闻。</p>
         <ol className="briefs-list">
           {topNews.slice(0, 7).map((item, index) => (
             <li key={`${item.title}-${index}`}>
@@ -40,7 +40,7 @@ export default function AsidePanels({
       </section>
       <section className="popular" aria-label="热门文章">
         <h2>热门文章</h2>
-        <p>精选可提升搜索匹配的实用话题清单。</p>
+        <p>编辑部精选的 AI 实战干货，看完就能用。</p>
         <ol className="popular-list">
           {topArticles.slice(0, 7).map((article, index) => (
             <li key={`${article.title}-${index}`}>

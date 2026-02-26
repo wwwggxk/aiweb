@@ -11,10 +11,10 @@ function formatCount(n) {
 }
 
 function timeAgo(dateStr) {
-  const now = new Date("2026-02-26");
+  const now = new Date();
   const date = new Date(dateStr);
   const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-  if (diff === 0) return "今天";
+  if (diff <= 0) return "今天";
   if (diff <= 30) return `${diff}天前`;
   if (diff <= 365) return `${Math.floor(diff / 30)}个月前`;
   return dateStr;

@@ -6,7 +6,7 @@ import SiteFooter from '@/app/components/SiteFooter';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
 export const metadata = {
-  title: "AI 提示词 - ChatGPT Prompt 模板大全 | AI 工具导航",
+  title: "AI 提示词 - ChatGPT Prompt 模板大全",
   description: "精选 AI 提示词、ChatGPT Prompt 模板，覆盖写作、翻译、编程、设计等场景。免费使用，一键复制到 ChatGPT、Claude、文心一言等大语言模型。",
   keywords: [
     "AI 提示词",

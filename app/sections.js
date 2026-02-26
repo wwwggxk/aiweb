@@ -2,7 +2,7 @@ const sections = [
   {
     "id": "hot",
     "title": "热门推荐",
-    "description": "热门推荐相关工具与资源。",
+    "description": "大家都在用的 AI 利器，经过千万用户验证的好工具。",
     "items": [
       {
         "name": "DeepSeek",
@@ -81,7 +81,7 @@ const sections = [
   {
     "id": "smart",
     "title": "AI绘画",
-    "description": "AI绘画相关工具与资源。",
+    "description": "输入文字就能出图，让创意不再受技能限制。",
     "items": [
       {
         "name": "Nano Banana",
@@ -268,7 +268,7 @@ const sections = [
   {
     "id": "smart2",
     "title": "AI聊天",
-    "description": "AI聊天相关工具与资源。",
+    "description": "你的全能 AI 助手，写作、问答、编程样样行。",
     "items": [
       {
         "name": "DeepSeek",
@@ -347,7 +347,7 @@ const sections = [
   {
     "id": "smart4",
     "title": "AI提示词",
-    "description": "AI提示词相关工具与资源。",
+    "description": "用对提示词，让 AI 输出质量翻倍。",
     "items": [
       {
         "name": "Midlibrary",
@@ -462,7 +462,7 @@ const sections = [
   {
     "id": "smart9",
     "title": "AI图像处理",
-    "description": "AI图像处理相关工具与资源。",
+    "description": "一键抠图、修复、增强，告别繁琐 PS 操作。",
     "items": [
       {
         "name": "Booltool",
@@ -613,7 +613,7 @@ const sections = [
   {
     "id": "smart7",
     "title": "UI设计",
-    "description": "UI设计相关工具与资源。",
+    "description": "AI 加速界面设计，从原型到交付效率翻倍。",
     "items": [
       {
         "name": "Pixso AI生成设计稿",
@@ -692,7 +692,7 @@ const sections = [
   {
     "id": "smart8",
     "title": "平面设计",
-    "description": "平面设计相关工具与资源。",
+    "description": "海报、Logo、物料，AI 让专业设计触手可及。",
     "items": [
       {
         "name": "PLUG AI",
@@ -807,7 +807,7 @@ const sections = [
   {
     "id": "smart6",
     "title": "AI智能写作",
-    "description": "AI智能写作相关工具与资源。",
+    "description": "文案、文章、报告，AI 帮你又快又好地写。",
     "items": [
       {
         "name": "字语未来",
@@ -958,7 +958,7 @@ const sections = [
   {
     "id": "smart10",
     "title": "AI音视频",
-    "description": "AI音视频相关工具与资源。",
+    "description": "视频剪辑、配音、作曲，AI 大幅降低影音创作门槛。",
     "items": [
       {
         "name": "Sora",
@@ -1109,7 +1109,7 @@ const sections = [
   {
     "id": "smart5",
     "title": "3D设计",
-    "description": "3D设计相关工具与资源。",
+    "description": "快速生成 3D 模型和效果图，创意可视化利器。",
     "items": [
       {
         "name": "Text to Skybox",
@@ -1188,7 +1188,7 @@ const sections = [
   {
     "id": "study",
     "title": "AI学习",
-    "description": "AI学习相关工具与资源。",
+    "description": "系统学习 AI 技能，从入门到实战的完整路径。",
     "items": [
       {
         "name": "AIGC创意视觉提升班",
@@ -1267,7 +1267,7 @@ const sections = [
   {
     "id": "gadget",
     "title": "AI办公",
-    "description": "AI办公相关工具与资源。",
+    "description": "让 AI 接管重复办公事务，每天多出两小时。",
     "items": [
       {
         "name": "Microsoft 365 Copilot",
@@ -1346,7 +1346,7 @@ const sections = [
   {
     "id": "translate",
     "title": "AI翻译",
-    "description": "AI翻译相关工具与资源。",
+    "description": "超越传统机翻，理解语境的智能翻译体验。",
     "items": [
       {
         "name": "Deepl翻译器",
@@ -1425,7 +1425,7 @@ const sections = [
   {
     "id": "program",
     "title": "AI编程开发",
-    "description": "AI编程开发相关工具与资源。",
+    "description": "代码补全、Debug、架构设计，开发者的 AI 搭档。",
     "items": [
       {
         "name": "GitHub Copilot",
@@ -1540,7 +1540,7 @@ const sections = [
   {
     "id": "institution",
     "title": "AI研究机构",
-    "description": "AI研究机构相关工具与资源。",
+    "description": "追踪 AI 前沿论文与技术动态，了解行业走向。",
     "items": [
       {
         "name": "中科院",
@@ -1619,7 +1619,7 @@ const sections = [
   {
     "id": "smart12",
     "title": "AIGC达人",
-    "description": "AIGC达人相关工具与资源。",
+    "description": "来自一线创作者的 AI 玩法和灵感分享。",
     "items": [
       {
         "name": "Simon的白日梦",
@@ -1698,7 +1698,7 @@ const sections = [
   {
     "id": "aitools",
     "title": "AI工具合集",
-    "description": "AI工具合集相关工具与资源。",
+    "description": "帮你从海量工具中精选出真正值得用的那些。",
     "items": [
       {
         "name": "Powerfulai",
@@ -1741,7 +1741,7 @@ const sections = [
   {
     "id": "smart11",
     "title": "探索更多",
-    "description": "探索更多相关工具与资源。",
+    "description": "发现 AI 在更多领域的创新应用和可能性。",
     "items": [
       {
         "name": "OpenGPT",
