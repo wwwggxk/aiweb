@@ -59,7 +59,7 @@ export default async function PromptsPage() {
           "@type": "Article",
           name: prompt.title,
           description: prompt.description,
-          url: `${siteUrl}/prompts/${prompt.id}`
+          url: `${siteUrl}/prompts/${prompt.slug || prompt.id}`
         }
       }))
     }

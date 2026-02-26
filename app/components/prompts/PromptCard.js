@@ -16,7 +16,7 @@ export default function PromptCard({ prompt, formatCount }) {
 
   return (
     <Link
-      href={`/prompts/${prompt.id}`}
+      href={`/prompts/${prompt.slug || prompt.id}`}
       className="prompt-card-link"
       aria-label={`查看 ${titleMain} 详情`}
     >

@@ -12,13 +12,13 @@ const SEO_KEYWORDS =
 export async function generateStaticParams() {
   const prompts = await getPrompts();
   return prompts.map((prompt) => ({
-    id: String(prompt.id),
+    slug: prompt.slug || String(prompt.id),
   }));
 }
 
 export async function generateMetadata({ params }) {
-  const id = params?.id;
-  if (!id) {
+  const slug = params?.slug;
+  if (!slug) {
     return {
       title: `提示词详情`,
       description: `浏览与复制 AI 提示词、ChatGPT Prompt 模板，免费使用。`,
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
     };
   }
   const list = await getPrompts();
-  const prompt = list.find((p) => String(p.id) === String(id));
+  const prompt = list.find((p) => (p.slug || String(p.id)) === slug);
   if (!prompt) {
     return {
       title: `未找到`,
@@ -54,11 +54,12 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function PromptDetailPage({ params }) {
-  const id = params?.id;
+  const slug = params?.slug;
   const list = await getPrompts();
-  const prompt = list.find((p) => String(p.id) === String(id)) ?? null;
+  const prompt = list.find((p) => (p.slug || String(p.id)) === slug) ?? null;
   const sidebarList = list.map((p) => ({
     id: p.id,
+    slug: p.slug || String(p.id),
     title: p.title,
     usageCount: p.usageCount,
     usage: p.usage,

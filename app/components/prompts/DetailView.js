@@ -11,17 +11,17 @@ function formatCount(n) {
 function getRelatedPrompts(current, allPrompts, limit = 8) {
   if (!current || !allPrompts?.length) return [];
   const currentTags = new Set(Array.isArray(current.tags) ? current.tags : []);
-  const id = String(current.id);
+  const slug = current.slug || String(current.id);
   return allPrompts
-    .filter((p) => String(p.id) !== id && Array.isArray(p.tags) && p.tags.some((t) => currentTags.has(t)))
+    .filter((p) => (p.slug || String(p.id)) !== slug && Array.isArray(p.tags) && p.tags.some((t) => currentTags.has(t)))
     .slice(0, limit);
 }
 
 function getHotPrompts(current, allPrompts, limit = 8) {
   if (!allPrompts?.length) return [];
-  const id = String(current?.id);
+  const slug = current?.slug || String(current?.id);
   return [...allPrompts]
-    .filter((p) => String(p.id) !== id)
+    .filter((p) => (p.slug || String(p.id)) !== slug)
     .sort((a, b) => (b.usageCount ?? 0) - (a.usageCount ?? 0))
     .slice(0, limit);
 }
@@ -169,8 +169,8 @@ export default function DetailView({ prompt, allPrompts = [] }) {
               <p className="detail-sidebar-desc">同分类下的其他 Prompt 模板</p>
               <ul className="detail-sidebar-list">
                 {related.map((p) => (
-                  <li key={p.id}>
-                    <Link href={`/prompts/${p.id}`} className="detail-sidebar-link">
+                  <li key={p.slug || p.id}>
+                    <Link href={`/prompts/${p.slug || p.id}`} className="detail-sidebar-link">
                       {p.title || '未命名'}
                       {(p.usageCount ?? p.usage) > 0 && (
                         <span className="detail-sidebar-usage">{formatCount(p.usageCount ?? p.usage)}</span>
@@ -187,8 +187,8 @@ export default function DetailView({ prompt, allPrompts = [] }) {
               <p className="detail-sidebar-desc">使用量较高的 ChatGPT Prompt 推荐</p>
               <ul className="detail-sidebar-list">
                 {hot.map((p) => (
-                  <li key={p.id}>
-                    <Link href={`/prompts/${p.id}`} className="detail-sidebar-link">
+                  <li key={p.slug || p.id}>
+                    <Link href={`/prompts/${p.slug || p.id}`} className="detail-sidebar-link">
                       {p.title || '未命名'}
                       {(p.usageCount ?? p.usage) > 0 && (
                         <span className="detail-sidebar-usage">{formatCount(p.usageCount ?? p.usage)}</span>

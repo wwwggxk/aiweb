@@ -70,7 +70,7 @@ export default async function sitemap() {
   }));
 
   const promptPages = prompts.slice(0, 100).map((prompt) => ({
-    url: `${siteUrl}/prompts/${prompt.id}`,
+    url: `${siteUrl}/prompts/${prompt.slug || prompt.id}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.6

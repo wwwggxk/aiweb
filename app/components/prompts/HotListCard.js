@@ -87,7 +87,7 @@ export default function HotListCard({ prompts = [] }) {
           const isTop3 = rank <= 3;
           return (
             <li key={p.id}>
-              <Link href={`/prompts/${p.id}`} className="hot-list-link">
+              <Link href={`/prompts/${p.slug || p.id}`} className="hot-list-link">
                 <span className={`hot-list-num ${isTop3 ? 'hot-list-num-top' : ''}`}>{rank}</span>
                 <span className="hot-list-label">{p.title || '未命名'}</span>
               </Link>

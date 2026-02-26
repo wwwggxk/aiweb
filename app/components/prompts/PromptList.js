@@ -91,7 +91,7 @@ export default function PromptList({ prompts, searchKeyword = '' }) {
           <HotListCard prompts={prompts} />
         </li>
         {filtered.map((p) => (
-          <li key={p.id}>
+          <li key={p.slug || p.id}>
             <PromptCard prompt={p} formatCount={formatCount} />
           </li>
         ))}
