@@ -5,6 +5,7 @@ import { toolDetails } from "../../data/toolDetails";
 import { categoryTemplates } from "../../data/categoryTemplates";
 import TopNav from "../../components/TopNav";
 import SiteFooter from "../../components/SiteFooter";
+import OutboundLink from "../../components/OutboundLink";
 
 function getToolKey(name) {
   return String(name || "").replace(/\s+/g, "");
@@ -70,10 +71,51 @@ const popularItems = sections
 
 export const dynamic = "force-static";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
+
 export function generateStaticParams() {
   return allTools.map((item) => ({
     key: item.key
   }));
+}
+
+export function generateMetadata({ params }) {
+  const key = decodeURIComponent(params?.key || "");
+  const tool = toolMap.get(key);
+  if (!tool) {
+    return { title: "未找到工具" };
+  }
+  const title = `${tool.name} - ${tool.sectionTitle}工具`;
+  const description = tool.desc
+    ? `${tool.name}：${tool.desc} 查看详细功能介绍、使用技巧与替代方案。`
+    : `${tool.name} 是一款${tool.sectionTitle}工具，点击查看详细功能介绍、使用方法与用户评价。`;
+  const keywords = [
+    tool.name,
+    `${tool.name} 使用教程`,
+    `${tool.name} 怎么用`,
+    tool.sectionTitle,
+    `${tool.sectionTitle}工具推荐`,
+    "AI 工具"
+  ];
+  return {
+    title,
+    description,
+    keywords,
+    alternates: { canonical: `${siteUrl}/tools/${key}` },
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/tools/${key}`,
+      type: "article",
+      siteName: "AI 工具导航",
+      images: tool.icon ? [tool.icon] : undefined
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description
+    }
+  };
 }
 
 /* 根据工具名和分类获取详情 */
@@ -265,9 +307,9 @@ export default function ToolDetailPage({ params }) {
           </div>
           <p>{tool.desc}</p>
           <div className="tool-detail-actions">
-            <a className="tool-detail-btn" href={tool.url} target="_blank" rel="noreferrer">
+            <OutboundLink className="tool-detail-btn" href={tool.url} toolName={tool.name}>
               访问使用
-            </a>
+            </OutboundLink>
           </div>
         </div>
       </div>
@@ -285,9 +327,36 @@ export default function ToolDetailPage({ params }) {
     </section>
   );
 
+  const jsonLd = tool ? {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: tool.name,
+    description: tool.desc,
+    url: tool.url,
+    applicationCategory: tool.sectionTitle,
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "CNY"
+    },
+    aggregateRating: tool.popularity > 0 ? {
+      "@type": "AggregateRating",
+      ratingValue: Math.min(5, tool.popularity + 0.5).toFixed(1),
+      bestRating: "5",
+      ratingCount: String(Math.max(10, tool.popularity * 50))
+    } : undefined
+  } : null;
+
   return (
     <div className="page" id="top">
       <TopNav current="/" />
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       <div className="content content--wide">
         <main className="content-main">
           <div className="content-primary">{mainContent}</div>

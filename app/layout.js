@@ -1,6 +1,10 @@
 import "./globals.css";
+import Script from "next/script";
+import { Suspense } from "react";
+import { AnalyticsPageView } from "./components/Analytics";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
+const GA_ID = "G-3CQQCMKWWT";
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
@@ -103,14 +107,28 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-3CQQCMKWWT" />
-        <script
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script
+          id="ga-init"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-3CQQCMKWWT');
+gtag('config', '${GA_ID}', {
+  page_path: window.location.pathname,
+  send_page_view: true,
+  cookie_flags: 'SameSite=None;Secure',
+  custom_map: {
+    dimension1: 'tool_name',
+    dimension2: 'article_category',
+    dimension3: 'content_type'
+  }
+});
 `
           }}
         />
@@ -120,6 +138,9 @@ gtag('config', 'G-3CQQCMKWWT');
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <Suspense fallback={null}>
+          <AnalyticsPageView />
+        </Suspense>
         {children}
       </body>
     </html>

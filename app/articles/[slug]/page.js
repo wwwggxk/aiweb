@@ -86,8 +86,8 @@ export default function ArticlePage({ params }) {
     headline: article.title,
     description: article.summary,
     url: `${siteUrl}/articles/${article.slug}`,
-    datePublished: "2026-01-01",
-    dateModified: "2026-01-01",
+    datePublished: article.date || "2026-01-01",
+    dateModified: article.date || "2026-01-01",
     author: {
       "@type": "Organization",
       name: "AI 工具导航"
@@ -102,7 +102,7 @@ export default function ArticlePage({ params }) {
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${siteUrl}/article/${article.slug}`
+      "@id": `${siteUrl}/articles/${article.slug}`
     },
     breadcrumb: {
       "@type": "BreadcrumbList",
@@ -156,7 +156,7 @@ export default function ArticlePage({ params }) {
                   </section>
                 ))}
               </div>
-              <LikeButton />
+              <LikeButton contentType="article" contentId={article.slug} />
             </article>
           </div>
           <aside className="content-aside" aria-label="相关文章">

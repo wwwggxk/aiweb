@@ -3,18 +3,9 @@ export const dynamic = "force-static";
 import sections from "./sections";
 import { getPrompts } from "./lib/get-prompts";
 import { newsItems } from "./data/newsItems";
+import { articleItems } from "./data/articleItems";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
-
-const articles = [
-  "ai-writing-tools-for-beginners",
-  "ai-image-prompt-guide",
-  "ai-video-generator-comparison",
-  "ai-ppt-generator",
-  "ai-office-productivity",
-  "ai-coding-assistant",
-  "ai-voice-generator"
-];
 
 function getToolKey(name) {
   return String(name || "").replace(/\s+/g, "");
@@ -57,12 +48,19 @@ export default async function sitemap() {
     }
   ];
 
-  const articlePages = articles.map((slug) => ({
-    url: `${siteUrl}/articles/${slug}`,
-    lastModified: new Date(),
+  const articlePages = articleItems.map((article) => ({
+    url: `${siteUrl}/articles/${article.slug}`,
+    lastModified: article.date ? new Date(article.date) : new Date(),
     changeFrequency: "monthly",
     priority: 0.8
   }));
+
+  const articlesListPage = {
+    url: `${siteUrl}/articles`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.9
+  };
 
   const toolPages = allTools.map((tool) => ({
     url: `${siteUrl}/tools/${tool.key}`,
@@ -85,5 +83,5 @@ export default async function sitemap() {
     priority: 0.8
   }));
 
-  return [...staticPages, ...articlePages, ...newsPages, ...toolPages, ...promptPages];
+  return [...staticPages, articlesListPage, ...articlePages, ...newsPages, ...toolPages, ...promptPages];
 }

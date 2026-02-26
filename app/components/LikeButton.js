@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { trackLike } from "./Analytics";
 
-export default function LikeButton() {
+export default function LikeButton({ contentType = "article", contentId = "" }) {
   const [liked, setLiked] = useState(false);
   const [hovered, setHovered] = useState(false);
 
@@ -10,7 +11,11 @@ export default function LikeButton() {
     <div className="like-button-wrapper">
       <button
         className={`like-button ${hovered ? "like-button--expanded" : ""} ${liked ? "like-button--liked" : ""}`}
-        onClick={() => setLiked((v) => !v)}
+        onClick={() => {
+          const next = !liked;
+          setLiked(next);
+          if (next) trackLike(contentType, contentId);
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         aria-label={liked ? "取消点赞" : "点赞"}
