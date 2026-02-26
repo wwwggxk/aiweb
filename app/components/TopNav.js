@@ -40,6 +40,7 @@ export default function TopNav({ current = "" }) {
               <rect x="12" y="12" width="104" height="104" fill="#FF8A3D" />
               <rect x="16" y="16" width="96" height="96" fill="#FFFFFF" />
               <rect x="20" y="20" width="88" height="88" fill="#FFF7ED" />
+              {/* Pixel 0 */}
               <rect x="36" y="40" width="8" height="8" fill="#111827" />
               <rect x="44" y="40" width="8" height="8" fill="#111827" />
               <rect x="52" y="40" width="8" height="8" fill="#111827" />
@@ -54,6 +55,9 @@ export default function TopNav({ current = "" }) {
               <rect x="44" y="72" width="8" height="8" fill="#111827" />
               <rect x="52" y="72" width="8" height="8" fill="#111827" />
               <rect x="60" y="72" width="8" height="8" fill="#111827" />
+              <rect x="36" y="80" width="8" height="8" fill="#111827" />
+              <rect x="60" y="80" width="8" height="8" fill="#111827" />
+              {/* Pixel 1 */}
               <rect x="84" y="40" width="8" height="8" fill="#111827" />
               <rect x="84" y="48" width="8" height="8" fill="#111827" />
               <rect x="84" y="56" width="8" height="8" fill="#111827" />

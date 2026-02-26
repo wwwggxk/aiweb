@@ -8,23 +8,18 @@ export const dynamic = "force-static";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
 export const metadata = {
-  title: "AI 资讯 - 最新 AI 工具动态与热门文章 | AI 工具导航",
-  description: "精选近期热门 AI 工具与动态，聚合高搜索热度的长尾主题内容。快速掌握 AI 行业趋势，了解最新 AI 工具推荐。",
+  title: "AI 资讯 - 最新 AI 工具动态与行业趋势 | AI 工具导航",
+  description: "精选 AI 行业资讯，覆盖大模型更新、工具发布、开源生态与政策法规。快速掌握 AI 领域最新动态。",
   keywords: [
-    "AI 资讯",
-    "AI 新闻",
-    "AI 工具动态",
-    "AI 行业趋势",
-    "热门 AI 工具",
-    "AI 工具推荐",
-    "AI 最新消息"
+    "AI 资讯", "AI 新闻", "AI 工具动态", "AI 行业趋势",
+    "ChatGPT 更新", "大模型新闻", "AI 最新消息"
   ],
   alternates: {
     canonical: `${siteUrl}/news`
   },
   openGraph: {
-    title: "AI 资讯 - 最新 AI 工具动态与热门文章",
-    description: "精选近期热门 AI 工具与动态，快速掌握 AI 行业趋势。",
+    title: "AI 资讯 - 最新 AI 工具动态与行业趋势",
+    description: "精选 AI 行业资讯，快速掌握 AI 领域最新动态。",
     url: `${siteUrl}/news`,
     type: "website",
     siteName: "AI 工具导航"
@@ -32,10 +27,27 @@ export const metadata = {
   twitter: {
     card: "summary",
     title: "AI 资讯 - 最新 AI 工具动态",
-    description: "精选近期热门 AI 工具与动态，快速掌握 AI 行业趋势。"
+    description: "精选 AI 行业资讯，快速掌握 AI 领域最新动态。"
   }
 };
 
+function formatCount(n) {
+  if (n >= 10000) return (n / 10000).toFixed(1) + "w";
+  if (n >= 1000) return (n / 1000).toFixed(1) + "k";
+  return String(n);
+}
+
+function timeAgo(dateStr) {
+  const now = new Date("2026-02-26");
+  const date = new Date(dateStr);
+  const diff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+  if (diff === 0) return "今天";
+  if (diff === 1) return "昨天";
+  if (diff <= 7) return `${diff}天前`;
+  if (diff <= 30) return `${Math.floor(diff / 7)}周前`;
+  if (diff <= 365) return `${Math.floor(diff / 30)}个月前`;
+  return dateStr;
+}
 
 export default function NewsPage() {
   return (
@@ -47,18 +59,41 @@ export default function NewsPage() {
           <div className="content-primary">
             <section className="news-list" aria-label="资讯列表">
               {newsItems.map((news) => (
-                <article key={news.id} className="news-item">
-                  <h2 className="news-item-title">
-                    <a href={`/news/${news.slug}`} title={news.title}>
-                      {news.title}
+                <article key={news.id} className="news-card">
+                  <div className="news-card-body">
+                    <h2 className="news-card-title">
+                      <a href={`/news/${news.slug}`} title={news.title}>
+                        {news.title}
+                      </a>
+                    </h2>
+                    <p className="news-card-summary">{news.summary}</p>
+                    <div className="news-card-meta">
+                      <time dateTime={news.date}>{timeAgo(news.date)}</time>
+                      <span className="news-card-dot">·</span>
+                      <span>AI工具编辑部</span>
+                      {news.views > 0 && (
+                        <>
+                          <span className="news-card-dot">·</span>
+                          <span className="news-card-views">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            {formatCount(news.views)}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  {news.cover && (
+                    <a href={`/news/${news.slug}`} className="news-card-cover" aria-hidden="true">
+                      <img
+                        src={news.cover}
+                        alt=""
+                        width={200}
+                        height={130}
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </a>
-                  </h2>
-                  <div className="news-item-content">
-                    <p>{news.summary}</p>
-                  </div>
-                  <div className="news-item-meta">
-                    <time dateTime={news.date}>{news.date}</time>
-                  </div>
+                  )}
                 </article>
               ))}
             </section>
@@ -68,7 +103,7 @@ export default function NewsPage() {
             <section className="briefs">
               <h2>最新资讯</h2>
               <ol className="briefs-list">
-                {topNews.map((news, index) => (
+                {topNews.slice(0, 7).map((news, index) => (
                   <li key={`${news.title}-${index}`}>
                     <a href={news.url} title={news.title}>
                       <h3 className="briefs-title">{news.title}</h3>

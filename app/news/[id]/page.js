@@ -4,6 +4,12 @@ import { newsItems } from "../../data/newsItems";
 import TopNav from "../../components/TopNav";
 import SiteFooter from "../../components/SiteFooter";
 
+function formatCount(n) {
+  if (n >= 10000) return (n / 10000).toFixed(1) + "w";
+  if (n >= 1000) return (n / 1000).toFixed(1) + "k";
+  return String(n);
+}
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
 export function generateStaticParams() {
@@ -68,7 +74,7 @@ export default function NewsDetailPage({ params }) {
     );
   }
 
-  const related = newsItems.filter((item) => item.id !== news.id);
+  const related = newsItems.filter((item) => item.id !== news.id).slice(0, 5);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -108,6 +114,12 @@ export default function NewsDetailPage({ params }) {
                 <h1 className="news-detail-title">{news.title}</h1>
                 <div className="news-detail-meta">
                   <time dateTime={news.date}>{news.date}</time>
+                  {news.views > 0 && (
+                    <span className="news-detail-views">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      {formatCount(news.views)} 次阅读
+                    </span>
+                  )}
                 </div>
               </header>
 

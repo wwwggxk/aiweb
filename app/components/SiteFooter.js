@@ -6,6 +6,7 @@ export default function SiteFooter() {
         <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
           京ICP备2026004104号-1
         </a>
+        {" · Powered by AI"}
       </p>
     </footer>
   );

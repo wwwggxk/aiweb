@@ -3,6 +3,7 @@ export const dynamic = "force-static";
 import { articleItems } from "../../data/articleItems";
 import TopNav from "../../components/TopNav";
 import SiteFooter from "../../components/SiteFooter";
+import LikeButton from "../../components/LikeButton";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://00011000.com";
 
@@ -155,6 +156,7 @@ export default function ArticlePage({ params }) {
                   </section>
                 ))}
               </div>
+              <LikeButton />
             </article>
           </div>
           <aside className="content-aside" aria-label="相关文章">
